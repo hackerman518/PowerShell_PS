@@ -1,0 +1,124 @@
+var webdriver = require('/usr/local/node-v0.10.33-darwin-x64/lib/node_modules/selenium-webdriver')
+driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build();
+
+url = "file:///Users/TimLiu/Desktop/baidu.html"
+driver.get(url)
+driver.sleep(1000);
+popupLinkXPath = "/html/body/a[5]";
+
+driver.findElement(webdriver.By.xpath(popupLinkXPath)).click()
+
+driver.sleep(1000);
+
+driver.getAllWindowHandles()
+    .then(function(y) {
+        driver.switchTo().window(y[1])
+            .then(function() {
+                driver.getWindowHandle()
+                    .then(function(x) {
+                        console.log("switch to: " + x)
+                    })
+
+                driver.findElement(webdriver.By.id('kw')).sendKeys('TimTest');
+                driver.sleep(1000);
+                driver.findElement(webdriver.By.id('su')).click();
+                driver.sleep(1000);
+                driver.close();
+            })
+
+        driver.sleep(1000);
+        driver.switchTo().window(y[0]);
+        // driver.switchTo().window(currentWindowHandle);
+
+        driver.getWindowHandle()
+            .then(function(x) {
+                console.log("switch back to: " + x)
+            })
+    })
+
+
+driver.getWindowHandle()
+    .then(function(x) {
+        console.log("After closed popup window")
+        console.log(x)
+    })
+
+driver.getTitle()
+    .then(function(titleName) {
+        console.log(titleName)
+    })
+
+driver.sleep(1000);
+driver.get("http://www.qq.com")
+driver.getTitle()
+    .then(function(titleName) {
+        console.log(titleName)
+    })
+
+driver.sleep(2000)
+driver.close();
+
+
+
+
+<html>
+ <head> 
+  <title> Open in new window</title> 
+ </head> 
+ <body> 
+  <script type="text/javascript">
+<!--
+function popup(mylink, windowname) {
+    if (!window.focus) return true;
+    var href;
+    if (typeof(mylink) == 'string')
+        href = mylink;
+    else
+        href = mylink.href;
+    window.open(href, windowname, 'width=800,height=600,scrollbars=yes');
+    return false;
+}
+//-->
+</script> 
+  <br /> 
+  <a href="http://www.google.cn" target="_self"> Open google in new window: _self</a> 
+  <br /> 
+  <a href="http://www.google.cn" target="_this"> Open google in new window: _this</a> 
+  <br /> 
+  <a href="http://www.google.cn" target="_pop"> Open google in new window: _pop</a> 
+  <br /> 
+  <a href="http://www.google.cn" target="_parent"> Open google in new window: _parent</a> 
+  <br /> 
+  <a href="http://www.baidu.com" onclick="return popup(this, 'notes')">my popup</a>  
+ </body>
+</html>
+
+
+
+
+
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+import os
+
+url = "file:///Users/TimLiu/Desktop/baidu.html"
+
+dr = webdriver.Chrome()
+dr.get(url)
+sleep(1)
+# get popup link
+popup_link = dr.find_element_by_xpath("/html/body/a[5]")
+original_window = dr.current_window_handle
+popup_link.click()
+
+print len(dr.window_handles)
+print dr.current_window_handle
+# print dr.page_source
+print "Current Browser Name:" + dr.name
+
+
+# dr.switch_to_window
+
+
